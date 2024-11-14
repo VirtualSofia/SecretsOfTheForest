@@ -1,0 +1,114 @@
+[gd_scene load_steps=23 format=3 uid="uid://7wfkbfbve3kn"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_0cuxx"]
+[ext_resource type="Script" path="res://addons/terrabrush/TerraBrush.cs" id="2_vx4wb"]
+[ext_resource type="Texture2D" uid="uid://d3t50beqt3rs5" path="res://Game/Heightmap_0_0.res" id="3_4h74i"]
+[ext_resource type="Texture2D" uid="uid://cvrysbbyollxr" path="res://textures/Ground037_1K-PNG/Ground037_1K-PNG_Color.png" id="3_tu4dd"]
+[ext_resource type="Texture2D" uid="uid://d08v8gyosshde" path="res://textures/Ground037_1K-PNG/Ground037_1K-PNG_NormalGL.png" id="4_qswnw"]
+[ext_resource type="Script" path="res://addons/terrabrush/Scripts/EditorResources/ZoneResource.cs" id="4_v6sfn"]
+[ext_resource type="Script" path="res://addons/terrabrush/Scripts/EditorResources/ZonesResource.cs" id="5_mv7p0"]
+[ext_resource type="Texture2D" uid="uid://baol8a5ukox8b" path="res://textures/Ground037_1K-PNG/Ground037_1K-PNG_Roughness.png" id="5_pra8q"]
+[ext_resource type="Script" path="res://addons/terrabrush/Scripts/EditorResources/TextureSetResource.cs" id="6_jyb2l"]
+[ext_resource type="Script" path="res://addons/terrabrush/Scripts/EditorResources/TextureSetsResource.cs" id="7_flnss"]
+[ext_resource type="Texture2D" uid="uid://dc1yt2kbxia5e" path="res://Game/Splatmap_0_0_0.res" id="9_ec75f"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2rd74"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_ej1i5"]
+sky_material = SubResource("ProceduralSkyMaterial_2rd74")
+
+[sub_resource type="Environment" id="Environment_22n4s"]
+background_mode = 2
+sky = SubResource("Sky_ej1i5")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nk24y"]
+albedo_color = Color(0.4495, 0.87, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cr4pi"]
+albedo_color = Color(0.87, 0.2175, 0.706875, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_y3be4"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7uhk7"]
+
+[sub_resource type="Resource" id="Resource_me720"]
+script = ExtResource("6_jyb2l")
+Name = "Grass"
+AlbedoTexture = ExtResource("3_tu4dd")
+NormalTexture = ExtResource("4_qswnw")
+RoughnessTexture = ExtResource("5_pra8q")
+TextureDetail = -1
+
+[sub_resource type="Resource" id="Resource_smx4m"]
+script = ExtResource("7_flnss")
+TextureSets = [SubResource("Resource_me720")]
+
+[sub_resource type="Resource" id="Resource_ey58t"]
+script = ExtResource("4_v6sfn")
+ZonePosition = Vector2i(0, 0)
+HeightMapTexture = ExtResource("3_4h74i")
+SplatmapsTexture = [ExtResource("9_ec75f")]
+FoliagesTexture = []
+ObjectsTexture = []
+
+[sub_resource type="Resource" id="Resource_06231"]
+script = ExtResource("5_mv7p0")
+Zones = [SubResource("Resource_ey58t")]
+
+[node name="Game" type="Node3D"]
+
+[node name="tempmap" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="tempmap"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="tempmap"]
+environment = SubResource("Environment_22n4s")
+
+[node name="floor" type="CSGBox3D" parent="tempmap"]
+transform = Transform3D(28.3418, 0.000386093, 0.0297209, -0.0390231, 0.280356, -0.00615846, -0.0328298, 6.68192e-05, 25.6653, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_nk24y")
+use_collision = true
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="tempmap"]
+transform = Transform3D(1, 0, 0, 0, 1.47344, 0, 0, 0, 1.30999, 0.369277, 0.619033, 1.39365)
+material_override = SubResource("StandardMaterial3D_cr4pi")
+use_collision = true
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="tempmap"]
+transform = Transform3D(1, 0, 0, 0, 0.536167, 0, 0, 0, 1.30999, 0.341484, 0.291696, -3.27064)
+material_override = SubResource("StandardMaterial3D_cr4pi")
+use_collision = true
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="tempmap"]
+transform = Transform3D(2.1299, 0, 0, 0, 3.00479, 0, 0, 0, 2.47918, 3.5702, 1.10892, -3.27064)
+material_override = SubResource("StandardMaterial3D_cr4pi")
+use_collision = true
+
+[node name="player" type="CharacterBody3D" parent="."]
+transform = Transform3D(-0.999942, 0, -0.0108034, 0, 1, 0, 0.0108034, 0, -0.999942, 7.99812, 2.40213, -4.02914)
+script = ExtResource("1_0cuxx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="player"]
+mesh = SubResource("CapsuleMesh_y3be4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0216961, -0.000955582, -0.0439157)
+shape = SubResource("CapsuleShape3D_7uhk7")
+
+[node name="Head" type="Node3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.362212, 0)
+
+[node name="Camera3D" type="Camera3D" parent="player/Head"]
+
+[node name="TerraBrush" type="Node3D" parent="."]
+script = ExtResource("2_vx4wb")
+DataPath = "res://Game"
+TextureSets = SubResource("Resource_smx4m")
+TerrainZones = SubResource("Resource_06231")
+metadata/_edit_lock_ = true
